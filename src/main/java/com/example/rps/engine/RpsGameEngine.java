@@ -2,11 +2,13 @@ package com.example.rps.engine;
 
 import com.example.rps.domain.HandShape;
 import com.example.rps.domain.RoundResult;
+import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
 import static com.example.rps.domain.RoundResult.*;
 
+@Component
 public class RpsGameEngine implements GameEngine<HandShape> {
     private static HandShape[] POSSIBLE_RESULTS = {HandShape.ROCK, HandShape.PAPER, HandShape.SCISSOR};
 
