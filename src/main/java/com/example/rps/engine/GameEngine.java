@@ -1,14 +1,10 @@
 package com.example.rps.engine;
 
-import java.util.Optional;
+import com.example.rps.domain.RoundResult;
 
 public interface GameEngine<M extends Enum> {
 
     M getMove();
 
-    /**
-     *
-     * An empty Optional means a draw.
-     */
-    Optional<M> getWinner(M move1, M move2);
+    RoundResult getWinner(M move1, M move2);
 }
