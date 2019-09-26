@@ -1,6 +1,6 @@
 package com.example.rps.engine;
 
-import com.example.rps.HandShape;
+import com.example.rps.domain.HandShape;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;

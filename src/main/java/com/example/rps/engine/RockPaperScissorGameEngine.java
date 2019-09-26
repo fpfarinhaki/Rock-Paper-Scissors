@@ -1,8 +1,7 @@
 package com.example.rps.engine;
 
-import com.example.rps.HandShape;
+import com.example.rps.domain.HandShape;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.Random;
 
