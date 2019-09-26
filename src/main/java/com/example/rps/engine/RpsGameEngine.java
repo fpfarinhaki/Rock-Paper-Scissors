@@ -7,7 +7,7 @@ import java.util.Random;
 
 import static com.example.rps.domain.RoundResult.*;
 
-public class RockPaperScissorGameEngine implements GameEngine<HandShape> {
+public class RpsGameEngine implements GameEngine<HandShape> {
     private static HandShape[] POSSIBLE_RESULTS = {HandShape.ROCK, HandShape.PAPER, HandShape.SCISSOR};
 
     @Override

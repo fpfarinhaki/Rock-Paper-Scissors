@@ -12,9 +12,9 @@ import static com.example.rps.domain.RoundResult.PLAYER2_WIN;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(JUnitParamsRunner.class)
-public class RockPaperScissorGameEngineTest {
+public class RpsGameEngineTest {
 
-    private GameEngine<HandShape> rpsGameEnginge = new RockPaperScissorGameEngine();
+    private GameEngine<HandShape> rpsGameEnginge = new RpsGameEngine();
 
     @Test
     public void shouldRunARoundOfRpsGame() {
