@@ -18,8 +18,7 @@ public class RpsGameService implements GameService {
     private GameEngine<HandShape> rpsGameEngine;
 
     @Autowired
-    private GameSessionRepository rpsGameRepository;
-
+    private GameSessionRepository inMemoryGameSessionRepository;
 
     @Override
     public GameSession playRound(Optional<String> gameSessionId) {
@@ -27,7 +26,7 @@ public class RpsGameService implements GameService {
         HandShape playerTwoMove = rpsGameEngine.getMove();
         RoundResult result = rpsGameEngine.getWinner(playerOneMove, playerTwoMove);
 
-        GameSession gameSession = rpsGameRepository.fetchGameSession(gameSessionId);
+        GameSession gameSession = inMemoryGameSessionRepository.fetchGameSession(gameSessionId);
         gameSession.addRoundPlayed(new Round(playerOneMove, playerTwoMove, result));
 
         return gameSession;
