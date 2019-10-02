@@ -1,9 +1,12 @@
 package com.example.rps.service;
 
 import com.example.rps.domain.*;
+import com.example.rps.dto.Totals;
 import com.example.rps.engine.GameEngine;
 import com.example.rps.factory.RpsPlayerFactory;
 import com.example.rps.repository.GameSessionRepository;
+import com.sun.tools.javac.util.List;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -13,6 +16,8 @@ import org.mockito.Mock;
 import org.mockito.internal.verification.Times;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,9 +27,11 @@ import static org.mockito.BDDMockito.*;
 public class RpsGameServiceTest {
 
     private static final HandShape SOME_RANDOM_MOVE = HandShape.PAPER;
-    private static final String SOME_GENERATED_ID = "someGeneratedId";
+    private static final String GENERATED_ID = "someGeneratedId";
+    private static final Optional<String> SOME_GENERATED_ID = Optional.of(GENERATED_ID);
     private static final RoundResult SOME_ROUND_RESULT = RoundResult.DRAW;
     private static final HandShape PRESET_MOVE = HandShape.SCISSOR;
+    private static final Optional<String> NO_SESSION_ID = Optional.empty();
 
     @Mock private GameSessionRepository gameSessionRepository;
     @Mock private GameEngine rpsGameEngine;
@@ -36,13 +43,23 @@ public class RpsGameServiceTest {
     @InjectMocks
     private RpsGameService rpsGameService;
 
+    private GameSession gameSession;
+
+
+    @Before
+    public void setUp() {
+        gameSession = new GameSession(GENERATED_ID);
+        given(gameSessionRepository.fetchGameSession(NO_SESSION_ID)).willReturn(gameSession);
+        given(gameSessionRepository.fetchGameSession(SOME_GENERATED_ID)).willReturn(gameSession);
+    }
+
     @Test
     public void shouldPlayARoundOfGameWhenNoGameSessionIdProvided() {
-        Optional<String> noSessionId = Optional.empty();
-        given(gameSessionRepository.fetchGameSession(noSessionId)).willReturn(new GameSession(SOME_GENERATED_ID));
 
-        GameSession result = playRound(noSessionId);
+        //when
+        GameSession result = playRound(NO_SESSION_ID);
 
+        //then
         then(rpsGameEngine).should(new Times(1)).getWinner(playedRoundCaptor.capture());
         assertThat(playedRoundCaptor.getValue().getPlayerOneMove()).isEqualTo(SOME_RANDOM_MOVE);
         assertThat(playedRoundCaptor.getValue().getPlayerTwoMove()).isEqualTo(PRESET_MOVE);
@@ -55,13 +72,10 @@ public class RpsGameServiceTest {
     @Test
     public void shouldPlayRoundWhenExistantGameSessionIdIsProvided() {
         //Given a no sessionId for the first round
-        Optional<String> noSessionId = Optional.empty();
-        given(gameSessionRepository.fetchGameSession(noSessionId)).willReturn(new GameSession(SOME_GENERATED_ID));
-        GameSession firstRoundPlayed = playRound(Optional.empty());
+        GameSession firstRoundPlayed = playRound(NO_SESSION_ID);
 
         // Given a generated gameSessionId for the second round
         Optional<String> gameSessionId = Optional.ofNullable(firstRoundPlayed.getId());
-        given(gameSessionRepository.fetchGameSession(gameSessionId)).willReturn(firstRoundPlayed);
 
         //When second round is played
         GameSession secondRoundPlayed = playRound(gameSessionId);
@@ -70,10 +84,27 @@ public class RpsGameServiceTest {
         then(rpsGameEngine).should(new Times(2)).getWinner(playedRoundCaptor.capture());
         assertThat(playedRoundCaptor.getValue().getPlayerOneMove()).isEqualTo(SOME_RANDOM_MOVE);
         assertThat(playedRoundCaptor.getValue().getPlayerTwoMove()).isEqualTo(PRESET_MOVE);
-        then(gameSessionRepository).should(new Times(1)).fetchGameSession(noSessionId);
+        then(gameSessionRepository).should(new Times(1)).fetchGameSession(NO_SESSION_ID);
         then(gameSessionRepository).should(new Times(1)).fetchGameSession(gameSessionId);
         assertThat(secondRoundPlayed.getId()).isEqualTo(gameSessionId.get());
         assertThat(secondRoundPlayed.getRoundsPlayed()).hasSize(2);
+    }
+
+    @Test
+    public void shouldTotalizeAllGamesPlayed() {
+        //given 4 rounds played
+        GameSession gameSession = playRound(Optional.empty());
+        playRound(Optional.ofNullable(gameSession.getId()));
+        playRound(Optional.ofNullable(gameSession.getId()));
+        playRound(Optional.ofNullable(gameSession.getId()));
+        given(gameSessionRepository.getAll()).willReturn(List.of(gameSession));
+
+        //when
+        Totals totals = rpsGameService.getTotals();
+
+        //Then
+        then(gameSessionRepository).should().getAll();
+        assertThat(totals.getRounds()).isEqualTo(4);
     }
 
     private GameSession playRound(Optional<String> gameSessionId) {
