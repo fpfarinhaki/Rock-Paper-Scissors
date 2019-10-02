@@ -1,6 +1,7 @@
 package com.example.rps.repository;
 
 import com.example.rps.domain.GameSession;
+import com.example.rps.util.IdGenerator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
