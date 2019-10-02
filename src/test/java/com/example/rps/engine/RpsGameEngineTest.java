@@ -1,6 +1,7 @@
 package com.example.rps.engine;
 
 import com.example.rps.domain.HandShape;
+import com.example.rps.domain.Round;
 import com.example.rps.domain.RoundResult;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -14,34 +15,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(JUnitParamsRunner.class)
 public class RpsGameEngineTest {
 
-    private GameEngine<HandShape> rpsGameEnginge = new RpsGameEngine();
+    private GameEngine rpsGameEngine = new RpsGameEngine();
 
     @Test
-    public void shouldRunARoundOfRpsGame() {
-        assertThat(rpsGameEnginge.getMove()).isInstanceOf(HandShape.class);
-    }
+    public void shouldReturnAValidRoundResultForRpsGame() {
+        Round round = new Round(HandShape.PAPER, HandShape.ROCK);
 
-    @Test
-    public void shouldReturnAValidRpsResponse() {
-        //given
-        HandShape[] validRpsResult = {HandShape.PAPER, HandShape.ROCK, HandShape.SCISSOR};
-
-        //when
-        HandShape result = rpsGameEnginge.getMove();
-
-        //then
-        assertThat(result).isIn(validRpsResult);
-    }
-
-    @Test
-    public void shouldReturnAWinner() {
-        assertThat(rpsGameEnginge.getWinner(HandShape.PAPER, HandShape.ROCK)).isNotNull();
+        assertThat(rpsGameEngine.getWinner(round)).isNotNull();
+        assertThat(rpsGameEngine.getWinner(round)).isInstanceOf(RoundResult.class);
     }
 
     @Test
     @Parameters(method = "testGameResultWinners_Parameters")
     public void shouldReturnACorrectWinnerForTheBattle(HandShape move1, HandShape move2, RoundResult expectedResult) {
-        assertThat(rpsGameEnginge.getWinner(move1, move2)).isEqualTo(expectedResult);
+        assertThat(rpsGameEngine.getWinner(new Round(move1, move2))).isEqualTo(expectedResult);
     }
 
     @SuppressWarnings("unused")
@@ -59,7 +46,7 @@ public class RpsGameEngineTest {
     @Test
     @Parameters(method = "testGameResultDraws_Parameters")
     public void shouldReturnEmptyWinnerForADraw(HandShape move1, HandShape move2) {
-        assertThat(rpsGameEnginge.getWinner(move1, move2)).isEqualTo(RoundResult.DRAW);
+        assertThat(rpsGameEngine.getWinner(new Round(move1, move2))).isEqualTo(RoundResult.DRAW);
     }
 
     @SuppressWarnings("unused")
