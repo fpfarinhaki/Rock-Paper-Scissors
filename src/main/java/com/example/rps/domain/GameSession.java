@@ -16,7 +16,8 @@ public class GameSession {
         id = gameSessionId;
     }
 
-    public void addRoundPlayed(Round playedRound) {
+    public void addRoundPlayed(Round playedRound, RoundResult roundResult) {
+        playedRound.setRoundResult(roundResult);
         this.roundsPlayed.add(playedRound);
     }
 }

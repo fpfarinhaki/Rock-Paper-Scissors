@@ -1,6 +1,7 @@
 package com.example.rps.controller;
 
 import com.example.rps.domain.GameSession;
+import com.example.rps.domain.HandShape;
 import com.example.rps.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class RpsGameController {
     @GetMapping(value = {"/{gameSessionId}/round/play", "/round/play"}, produces = "application/json")
     public GameSession playRound(@PathVariable(name = "gameSessionId", required = false) Optional<String> gameSessionId) {
 
-        return rpsGameService.playRound(gameSessionId);
+        return rpsGameService.playRound(gameSessionId, HandShape.ROCK);
     }
 
 }

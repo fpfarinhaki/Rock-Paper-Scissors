@@ -1,6 +1,7 @@
 package com.example.rps.repository;
 
 import com.example.rps.domain.GameSession;
+import com.example.rps.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

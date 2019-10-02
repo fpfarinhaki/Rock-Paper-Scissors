@@ -1,14 +1,17 @@
 package com.example.rps.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
+@Setter
 public class Round {
 
-    private HandShape playerOneMove;
-    private HandShape playerTwoMove;
+    private final HandShape playerOneMove;
+    private final HandShape playerTwoMove;
+
     private RoundResult roundResult;
 
 }

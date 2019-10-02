@@ -1,4 +1,4 @@
-package com.example.rps.repository;
+package com.example.rps.util;
 
 import org.springframework.stereotype.Component;
 
