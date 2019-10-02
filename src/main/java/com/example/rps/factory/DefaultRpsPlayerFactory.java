@@ -5,7 +5,9 @@ import com.example.rps.domain.PresetMoveRpsPlayer;
 import com.example.rps.domain.RandomMoveRpsPlayer;
 import com.example.rps.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DefaultRpsPlayerFactory implements RpsPlayerFactory {
 
     @Autowired
