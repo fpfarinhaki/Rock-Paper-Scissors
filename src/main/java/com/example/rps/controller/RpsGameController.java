@@ -2,6 +2,7 @@ package com.example.rps.controller;
 
 import com.example.rps.domain.GameSession;
 import com.example.rps.domain.HandShape;
+import com.example.rps.dto.Totals;
 import com.example.rps.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,11 @@ public class RpsGameController {
     public GameSession playRound(@PathVariable(name = "gameSessionId", required = false) Optional<String> gameSessionId) {
 
         return rpsGameService.playRound(gameSessionId, HandShape.ROCK);
+    }
+
+    @GetMapping(value = "/totals", produces = "application/json")
+    public Totals getTotals() {
+        return rpsGameService.getTotals();
     }
 
 }
