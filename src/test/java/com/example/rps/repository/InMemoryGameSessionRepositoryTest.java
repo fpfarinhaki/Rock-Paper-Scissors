@@ -2,12 +2,14 @@ package com.example.rps.repository;
 
 import com.example.rps.domain.GameSession;
 import com.example.rps.util.IdGenerator;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,10 +26,13 @@ public class InMemoryGameSessionRepositoryTest {
     @Mock
     IdGenerator idGenerator;
 
+    @Before
+    public void setUp() throws Exception {
+        given(idGenerator.generateId()).willReturn(SOME_GENERATED_ID);
+    }
+
     @Test
     public void shouldCreateANewGameSession() {
-        given(idGenerator.generateId()).willReturn(SOME_GENERATED_ID);
-
         GameSession gameSession = repository.fetchGameSession(Optional.empty());
 
         then(idGenerator).should().generateId();
@@ -37,7 +42,6 @@ public class InMemoryGameSessionRepositoryTest {
 
     @Test
     public void shouldReturnAnExistantGameSession() {
-        given(idGenerator.generateId()).willReturn(SOME_GENERATED_ID);
         GameSession previouslyCreatedGameSession = repository.fetchGameSession(Optional.empty());
         String previouslyCreatedGameSessionid = previouslyCreatedGameSession.getId();
 
@@ -45,5 +49,15 @@ public class InMemoryGameSessionRepositoryTest {
 
         assertThat(gameSession).isNotNull();
         assertThat(gameSession.getId()).isEqualTo(previouslyCreatedGameSessionid);
+    }
+
+    @Test
+    public void shouldGetAllGameSessions() {
+        GameSession gameSession = repository.fetchGameSession(Optional.empty());
+
+        Collection<GameSession> all = repository.getAll();
+
+        assertThat(all.size()).isEqualTo(1);
+        assertThat(all).contains(gameSession);
     }
 }

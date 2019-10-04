@@ -5,6 +5,7 @@ import com.example.rps.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -21,5 +22,10 @@ public class InMemoryGameSessionRepository implements GameSessionRepository {
         String id = gameSessionId.orElse(randomIdGenerator.generateId());
         gameSessionStore.putIfAbsent(id, new GameSession(id));
         return gameSessionStore.get(id);
+    }
+
+    @Override
+    public Collection<GameSession> getAll() {
+        return this.gameSessionStore.values();
     }
 }
